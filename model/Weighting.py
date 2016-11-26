@@ -27,10 +27,13 @@ class weighting_doc:
 
     def tf_idf(self, term_doc_dict):
         term_doc_dict = self.calculate_tf(term_doc_dict)
+        count = 0
         for (doc_id, terms) in term_doc_dict.items():
+            print(str(count+1)+"/"+str(len(term_doc_dict)))
             for (k, v) in terms.items():
                 if v != 0:
                     term_doc_dict[doc_id][k] = v * self.calculate_idf(term_doc_dict, k)
+            count += 1
         print("Term Weighting using TF-IDF DONE!!")
         return term_doc_dict
 
