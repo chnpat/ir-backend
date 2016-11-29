@@ -38,7 +38,7 @@ class Spliter:
             result = []
             for c in Course().select():
                 result += self.get_title_desc_token(c.course_id)
-            self.all_term = dict.fromkeys([str(s) for s in result],0)
+            self.all_term = dict.fromkeys([str(s) for s in result if s != ''],0)
         return self.all_term
 
     '''
@@ -82,3 +82,25 @@ class Spliter:
             self.print_to_file(k_list, str(course.course_id), infile)
         infile.close()
         print("Inverted Index File Creation done!!")
+
+
+    def get_JSON(self, tuples_list):
+        json = "{courses:["
+        for c_id, sim in tuples_list:
+            for course in Course().select():
+                if c_id[:-1] == str(course.course_id):                    
+                    json += "{"
+                    json += "'course_id':'" + str(course.course_id) + "',"
+                    json += "'course_title':'" + course.course_title + "',"
+                    json += "'course_description':'" + course.course_description + "',"
+                    json += "'language':'" + course.language + "',"
+                    json += "'level':'" + course.level + "',"
+                    json += "'student_enrolled':" + str(course.student_enrolled) + ","
+                    json += "'ratings':" + str(course.ratings) + ","
+                    json += "'overall_rating':" + str(course.overall_rating) + ","
+                    json += "'course_url':'" + course.course_url + "',"
+                    json += "'cover_image':'" + course.cover_image + "',"
+                    json += "'source':'" + course.source + "'"
+                    json += "},"
+        json = json[:-1] + "]}"
+        return json
