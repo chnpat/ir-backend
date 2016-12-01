@@ -1,4 +1,7 @@
 from model import *
+from model.query import Query
+from model.spliter import Spliter
+from model.readcsv import CSV_Reader
 import math as m
 
 class QueryController:
@@ -10,7 +13,7 @@ class QueryController:
     [('course_id1', 0.75), ('course_id2', 0.68)]
     '''
     def get_result(self, qr, method='Cosine', exp=False):
-        q = query()
+        q = Query()
         reader = CSV_Reader()
         q_dict = q.split_query(qr)
         all_d_dict = reader.get_dict("iif_weight.csv")
