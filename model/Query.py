@@ -1,9 +1,9 @@
 import re
-from Spliter import Spliter
-from Similarity import similarity
+from model.spliter import Spliter
+from model.similarity import Similarity
 import operator
 
-class query:
+class Query:
     def split_query(self, query):
         spl = Spliter()
         query_list = [ spl.stemmer(t) for t in re.sub(r'[^a-zA-Z0-9 \n\.]',' ',query.lower()).strip().split()]

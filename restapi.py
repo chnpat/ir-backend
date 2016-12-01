@@ -2,6 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
 import re
 import json
+from controller import QueryController
+from model.model import Course
 
 hostName = "localhost"
 hostPort = 8080
@@ -23,28 +25,27 @@ class IRRestBaseHandler(BaseHTTPRequestHandler):
 
 class IRRestAPI(IRRestBaseHandler):
 
-    def __init__(self):
-        self.query = None # IRBackend
-
     def do_GET(self):
+        query = QueryController() # IRBackend
 
         response_number = 404
-        query = ''
         msg = ''
 
         if None != re.search('\?q\=', self.path):
-            query = self.path[self.path.find('?')+1:]
-            query = query.split('&')
+            queryString = self.path[self.path.find('?')+1:]
+            queryString = queryString.split('&')
 
             params = dict()
-            for c in query:
+            for c in queryString:
                 (key, value) = c.split('=')
                 params[key] = value
+
+            result = query.get_result(params['q'])
+            msg = json.JSONEncode(result)
 
             # - - - - - - -
             # process some query 
 
-            msg = '[{"course_id": "abcdefgh","course_title": "สวัสดี", "course_description": "some description", "language": "English", "level": "Introduction", "student_enrolled": 42, "ratings": 423445, "overall_rating": 2.3, "course_url": "http://localhost/message", "cover_image": "http://localhost/image.jpg", "source": "edx"},{"course_id": "abceefw","course_title": "สวัสดี", "course_description": "some description", "language": "English", "level": "Introduction", "student_enrolled": 42, "ratings": 423445, "overall_rating": 2.3, "course_url": "http://localhost/message", "cover_image": "http://localhost/image.jpg", "source": "edx"}]'
 
         self.header_response()
         self.write_message(msg)
