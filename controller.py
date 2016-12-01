@@ -9,7 +9,7 @@ class QueryController:
     result:
     [('course_id1', 0.75), ('course_id2', 0.68)]
     '''
-    def get_result(self, qr, method, exp):
+    def get_result(self, qr, method='Cosine', exp=False):
         q = query()
         reader = CSV_Reader()
         q_dict = q.split_query(qr)
