@@ -1,7 +1,7 @@
 from model import *
 import math as m
 
-class controller:
+class QueryController:
     '''
     This function will be called from web service to result the list of
     retrieval result
