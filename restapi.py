@@ -33,6 +33,7 @@ class IRRestAPI(BaseHTTPRequestHandler):
 
     def do_GET(self):
         queryDocument = QueryController() # IRBackend
+        methods = ['Cosine', 'Jaccard', 'Euclidean', 'Manhudtan']
 
         response_number = 404
         response_msg = "{'result': 'Not found'}"
@@ -42,8 +43,9 @@ class IRRestAPI(BaseHTTPRequestHandler):
 
         if 'q' in query:
             response_number = 201
+            method = 'Cosine' if 'c' not in query else methods[int(query['c'][0])-1]
             response_msg = ' '.join(query['q'])
-            found_courses = queryDocument.get_result(query['q'][0])
+            found_courses = queryDocument.get_result(query['q'][0], method=method)
             course_id = [DataCleansing.course_cleansing(doc_id[0]) for doc_id in found_courses] 
             raw_in_clause = "'{}'".format("', '".join(course_id))
             courses = Course.raw("SELECT * FROM course WHERE course_id in ({}) ORDER BY FIELD(course_id, {})".format(raw_in_clause, raw_in_clause))
