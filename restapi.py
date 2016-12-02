@@ -44,10 +44,10 @@ class IRRestAPI(BaseHTTPRequestHandler):
             response_number = 201
             response_msg = ' '.join(query['q'])
             found_courses = queryDocument.get_result(query['q'][0])
-
             course_id = [DataCleansing.course_cleansing(doc_id[0]) for doc_id in found_courses] 
+            raw_in_clause = "'{}'".format("', '".join(course_id))
+            courses = Course.raw("SELECT * FROM course WHERE course_id in ({}) ORDER BY FIELD(course_id, {})".format(raw_in_clause, raw_in_clause))
 
-            courses = Course.select().where(Course.course_id << course_id)
             response_msg = [c.dictionary() for c in courses]
 
         response_msg = json.JSONEncoder().encode(response_msg)
