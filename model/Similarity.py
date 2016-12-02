@@ -20,7 +20,7 @@ class Similarity:
         self.d_list = []
         for (k,v) in q_dict.items():
             if v != 0:
-                if d_dict.has_key(k):
+                if k in d_dict:
                     self.word_list.append(k)
                     self.q_list.append(v)
                     self.d_list.append(d_dict[k])

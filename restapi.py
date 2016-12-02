@@ -6,8 +6,16 @@ from controller import QueryController
 from model.model import Course
 from urllib.parse import urlparse, parse_qs
 
+import uuid
+
 hostName = "localhost"
 hostPort = 8080
+
+class DataCleansing:
+
+    @staticmethod
+    def course_cleansing(course_id):
+        return course_id.replace('-', '')[:-1]
 
 class IRRestAPI(BaseHTTPRequestHandler):
     def header_response(self, http_status=201, content_type='application/json'):
@@ -35,14 +43,14 @@ class IRRestAPI(BaseHTTPRequestHandler):
         if 'q' in query:
             response_number = 201
             response_msg = ' '.join(query['q'])
-            response_msg = queryDocument.get_result(query['q'][0])
-            response_msg = json.JSONEncoder().encode(response_msg)
-            pass
-            # response_msg = 'dd'
+            found_courses = queryDocument.get_result(query['q'][0])
 
-            # - - - - - - -
-            # process some query 
+            course_id = [DataCleansing.course_cleansing(doc_id[0]) for doc_id in found_courses] 
 
+            courses = Course.select().where(Course.course_id << course_id)
+            response_msg = [c.dictionary() for c in courses]
+
+        response_msg = json.JSONEncoder().encode(response_msg)
 
         self.header_response(http_status=response_number)
         self.write_message(response_msg)

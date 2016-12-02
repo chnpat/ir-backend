@@ -25,7 +25,8 @@ class BaseModel(Model):
         db_table = 'course'
 
 class Course(BaseModel):
-    course_id = UUIDField(primary_key=True)
+    # course_id = UUIDField(primary_key=True)
+    course_id = CharField(primary_key=True)
     course_title = CharField()
     course_description = TextField()
     language = CharField()
@@ -45,7 +46,7 @@ class Course(BaseModel):
                 'language': "{0!s}".format(self.language),
                 'level': "{0!s}".format(self.level),
                 "student_enrolled": "{0!s}".format(self.student_enrolled),
-                "ratings": "{0!s}".format(self.rating),
+                "ratings": "{0!s}".format(self.ratings),
                 "overall_rating": "{0!s}".format(self.overall_rating),
                 "course_url": "{0!s}".format(self.course_url),
                 "cover_image": "{0!s}".format(self.cover_image),
