@@ -10,8 +10,8 @@ class Query:
         q_dict = spl.get_all_term()
         print(query_list)
         for q in query_list:
-            if q in q_dict: 
-                q_dict[q] += 1
+            if q_dict.has_key(q):
+                    q_dict[q] += 1
         return q_dict
 
     def print_result(self, tuples):
@@ -22,7 +22,7 @@ class Query:
         
     def retrieve(self, q_dict, all_d_dict, method, expand):
         sim_dict = {}
-        s = Similarity()
+        s = similarity()
         for (doc_id, term_dict) in all_d_dict.items():
             sim_dict[doc_id] = round(s.sim(term_dict, q_dict, method),4)
             

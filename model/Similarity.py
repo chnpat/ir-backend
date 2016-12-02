@@ -1,7 +1,7 @@
 import numpy as np
 import math as m
 
-class similarity:
+class Similarity:
     def __init__(self):
         self.word_list = []
         self.q_list = []

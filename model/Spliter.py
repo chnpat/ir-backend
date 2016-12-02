@@ -1,5 +1,5 @@
 import nltk, re, pprint, string
-from model import *
+from model.model import *
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 

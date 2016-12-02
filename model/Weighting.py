@@ -1,6 +1,6 @@
 import math as m, numpy as np
 
-class weighting_doc:
+class Weighting_Doc:
     '''
     ------------
     Term-Document Matrix is stored in dictionary format as following
@@ -39,7 +39,7 @@ class weighting_doc:
         return term_doc_dict
 
 
-class weighting_query:
+class Weighting_Query:
     '''
     ------------
     Term-Query Matrix is stored in dictionary format as following
@@ -58,12 +58,13 @@ class weighting_query:
         return term_q_dict
 
     def calculate_idf(self, term_doc_dict, term):
-        return weighting_doc().calculate_idf(term_doc_dict, term)
+        return Weighting_Doc().calculate_idf(term_doc_dict, term)
     
     def tf_idf(self, term_q_dict, term_doc_dict):
         term_q_dict = self.calculate_tf(term_q_dict)
         for (term, tf) in term_q_dict.items():
-            if term in term_doc_dict.values()[0].keys():
+            terms = list(list(term_doc_dict.values())[0].keys())
+            if term in terms:
                 term_q_dict[term] = term_q_dict[term] * self.calculate_idf(term_doc_dict, term)
             else:
                 term_q_dict[term] = 0

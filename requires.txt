@@ -1,0 +1,4 @@
+nltk==3.2.1
+numpy==1.11.2
+peewee==2.8.5
+PyMySQL==0.7.9
