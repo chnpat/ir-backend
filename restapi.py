@@ -4,15 +4,15 @@ import re
 import json
 from controller import QueryController
 from model.model import Course
+from urllib.parse import urlparse, parse_qs
 
 hostName = "localhost"
 hostPort = 8080
 
-class IRRestBaseHandler(BaseHTTPRequestHandler):
-
-    def header_response(self, http_status = 201, content_type = 'application/json'):
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json; charset=utf-8')
+class IRRestAPI(BaseHTTPRequestHandler):
+    def header_response(self, http_status=201, content_type='application/json'):
+        self.send_response(http_status)
+        self.send_header('Content-type', "{}; charset=utf-8".format(content_type))
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
 
@@ -23,32 +23,29 @@ class IRRestBaseHandler(BaseHTTPRequestHandler):
     def write_message(self, message):
         self.wfile.write( self.response_message(message) )
 
-class IRRestAPI(IRRestBaseHandler):
-
     def do_GET(self):
-        query = QueryController() # IRBackend
+        queryDocument = QueryController() # IRBackend
 
         response_number = 404
-        msg = ''
+        response_msg = "{'result': 'Not found'}"
+        urlparsed = urlparse(self.path)
+        query = parse_qs(urlparsed.query)
+        response_msg = query 
 
-        if None != re.search('\?q\=', self.path):
-            queryString = self.path[self.path.find('?')+1:]
-            queryString = queryString.split('&')
-
-            params = dict()
-            for c in queryString:
-                (key, value) = c.split('=')
-                params[key] = value
-
-            result = query.get_result(params['q'])
-            msg = json.JSONEncode(result)
+        if 'q' in query:
+            response_number = 201
+            response_msg = ' '.join(query['q'])
+            response_msg = queryDocument.get_result(query['q'][0])
+            response_msg = json.JSONEncoder().encode(response_msg)
+            pass
+            # response_msg = 'dd'
 
             # - - - - - - -
             # process some query 
 
 
-        self.header_response()
-        self.write_message(msg)
+        self.header_response(http_status=response_number)
+        self.write_message(response_msg)
 
 if '__main__' == __name__:
     irrestServer = HTTPServer((hostName, hostPort), IRRestAPI)
