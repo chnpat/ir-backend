@@ -18,10 +18,15 @@ class QueryController:
         q_dict = q.split_query(qr)
         all_d_dict = reader.get_dict("iif_weight.csv")
         result = q.retrieve(q_dict, all_d_dict, method, exp)
-        if(result[0][1]) == 1 or m.isnan(result[0][1]):
-            return []
+
+        if not result:
+            response = []
+        elif(result[0][1]) == 1 or m.isnan(result[0][1]):
+            response = []
         else:
-            return result
+            response = result
+
+        return response
 
     def get_JSON(self, tuples_list):
         spl = Spliter()
